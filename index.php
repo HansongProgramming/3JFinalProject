@@ -10,11 +10,15 @@ if (isset($_SESSION['user_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booking System</title>
+    <link rel="stylesheet" href="aesthetics.css">
 </head>
 <body>
-    <h1>Welcome to Our Booking System</h1>
-    <a href="login.php">Login</a>
-    <a href="registration.php">Register</a> 
-    <a href="services.php">View Services</a>
+    <div class="hero">    
+        <h1>Providing Wellness</h1>
+        <h2>One massage at a time</h2>
+        <a href="login.php">Book Now</a>
+        <a href="services.php">View Services</a>
+    </div>
+
 </body>
 </html>

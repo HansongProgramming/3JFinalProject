@@ -1,0 +1,15 @@
+
+a{
+    font-size: medium;
+    color: #6c584c;
+}
+
+.hero{
+    width: 50%;
+    height: 50%;
+    margin: 0 auto;
+}
+
+body{
+    background-color: #f0ead2;
+}

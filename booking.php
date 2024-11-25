@@ -35,6 +35,7 @@ $therapists = $conn->query("SELECT user_id, full_name FROM users WHERE role = 't
 <html>
 <head>
     <title>Make a Booking</title>
+    <link rel="stylesheet" href="aesthetics.css">
 </head>
 <body>
     <h1>Book a Service</h1>

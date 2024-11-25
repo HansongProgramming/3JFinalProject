@@ -13,6 +13,7 @@ $result = $conn->query("SELECT * FROM services");
 <html>
 <head>
     <title>View Services</title>
+    <link rel="stylesheet" href="aesthetics.css">
 </head>
 <body>
     <h1>Available Services</h1>
