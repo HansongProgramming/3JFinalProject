@@ -9,13 +9,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $phone_number = $_POST['phone_number'];
     $role = $_POST['role']; // Role dropdown
     
-    // Validate input fields
     if (empty($full_name) || empty($email) || empty($password) || empty($phone_number) || empty($role)) {
         echo "All fields are required.";
         exit;
     }
     
-    // Prepare the SQL query to insert data
     $sql = "INSERT INTO users (full_name, email, password, phone_number, role) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('sssss', $full_name, $email, $password, $phone_number, $role);
