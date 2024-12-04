@@ -4,7 +4,8 @@ if (isset($_SESSION['user_id'])) {
     header("Location: dashboard.php");
     exit();
 }
-?><!DOCTYPE html>
+?>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -13,12 +14,16 @@ if (isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="aesthetics.css">
 </head>
 <body>
-    <div class="hero">    
+    <div class="hero">
         <h1>Providing Wellness</h1>
         <h2>One massage at a time</h2>
-        <a href="login.php">Book Now</a>
-        <a href="services.php">View Services</a>
+        <a href="login.php" class="btn">Book Now</a>
+        <a href="services.php" class="btn">View Services</a>
+        
+        <!-- Video Section -->
+        <div class="video-container">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/your-video-id" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
     </div>
-
 </body>
 </html>
