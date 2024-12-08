@@ -320,3 +320,41 @@ body {
 #calendar tbody {
     display: table-row-group;
 }
+
+/* ADMIN DASHBOARD ---------------------------------------------------------- */
+.content {
+    padding: 10px;
+    width: 100vh;
+}
+
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+}
+
+.calendar-day {
+    padding: 10px;
+    border: 1px solid #ddd;
+    height: 100px;
+    position: relative;
+}
+
+.calendar-day-header {
+    font-weight: bold;
+    text-align: center;
+}
+
+.schedule {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    font-size: 15px;
+    color: #27ae60;
+    text-shadow: 3px 2px 8px rgba(0,0,0,0.5);
+    font-weight: bold;
+}
+
+.calendar h1{
+    padding: 5px;
+}

@@ -15,7 +15,7 @@ $upcoming_stmt = $conn->prepare("SELECT a.appointment_date, a.start_time, s.serv
     FROM appointments a
     JOIN services s ON a.service_id = s.service_id
     JOIN users u ON a.therapist_id = u.user_id
-    JOIN users c ON a.user_id = c.user_id  -- Join to get the client's name
+    JOIN users c ON a.user_id = c.user_id
     WHERE u.full_name = ? AND a.appointment_date >= CURDATE()
     ORDER BY a.appointment_date, a.start_time");
 $upcoming_stmt->bind_param("s", $therapist_name); // Binding therapist's name as a string parameter
@@ -28,12 +28,31 @@ $past_stmt = $conn->prepare("SELECT a.appointment_date, a.start_time, s.service_
     FROM appointments a
     JOIN services s ON a.service_id = s.service_id
     JOIN users u ON a.therapist_id = u.user_id
-    JOIN users c ON a.user_id = c.user_id  -- Join to get the client's name
+    JOIN users c ON a.user_id = c.user_id
     WHERE u.full_name = ? AND a.appointment_date < CURDATE()
     ORDER BY a.appointment_date DESC, a.start_time DESC");
 $past_stmt->bind_param("s", $therapist_name); // Binding therapist's name as a string parameter
 $past_stmt->execute();
 $past_appointments = $past_stmt->get_result();
+
+// Query to get the therapist's availability
+$availability_stmt = $conn->prepare("SELECT date,start_time, end_time FROM availability 
+    WHERE therapist_id = (SELECT user_id FROM users WHERE full_name = ?)");
+$availability_stmt->bind_param("s", $therapist_name);
+$availability_stmt->execute();
+$availability = $availability_stmt->get_result();
+
+// Query to get the therapist's reviews
+$reviews_stmt = $conn->prepare("SELECT r.rating, r.comment, r.created_at, a.appointment_date, u.full_name as client_name 
+    FROM reviews r
+    JOIN appointments a ON r.appointment_id = a.appointment_id
+    JOIN users u ON r.user_id = u.user_id
+    WHERE a.therapist_id = (SELECT user_id FROM users WHERE full_name = ?)
+    ORDER BY r.created_at DESC");
+$reviews_stmt->bind_param("s", $therapist_name);
+$reviews_stmt->execute();
+$reviews = $reviews_stmt->get_result();
+
 ?>
 
 <!DOCTYPE html>
@@ -102,8 +121,40 @@ $past_appointments = $past_stmt->get_result();
 
         <div class="filler">
             <div id="date-time"></div>
-            <h1><span class="highlight"><?php echo htmlspecialchars($_SESSION['user_name']); ?></span>'s Schedule</h1>
-            
+            <h2><span class="highlight"><?php echo htmlspecialchars($_SESSION['user_name']); ?></span>'s Schedule</h2>
+            <div class="availability">
+                <div class="cards">
+                    <?php if ($availability->num_rows > 0): ?>
+                        <?php while ($row = $availability->fetch_assoc()): ?>
+                            <div class="card">
+                                <p><strong>Date: </strong> <?php echo $row['date']; ?></p>
+                                <p><strong>From: <Span class="highlight"><?php echo $row['start_time']; ?> - <?php echo $row['end_time']; ?></Span></p>
+                            </div>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <p>No availability listed.</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <!-- Display the therapist's reviews and comments -->
+            <div class="reviews">
+                <h2>Reviews and Comments</h2>
+                <div class="cards">
+                    <?php if ($reviews->num_rows > 0): ?>
+                        <?php while ($row = $reviews->fetch_assoc()): ?>
+                            <div class="card">
+                                <p><strong>Client:</strong> <?php echo htmlspecialchars($row['client_name']); ?></p>
+                                <p><strong>Date:</strong> <?php echo htmlspecialchars($row['appointment_date']); ?></p>
+                                <p><strong>Rating:</strong> <?php echo htmlspecialchars($row['rating']); ?>/5</p>
+                                <p><strong>Comment:</strong> <?php echo htmlspecialchars($row['comment']); ?></p>
+                                <p><strong>Reviewed On:</strong> <?php echo htmlspecialchars($row['created_at']); ?></p>
+                            </div>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <p>No reviews available.</p>
+                    <?php endif; ?>
+                </div>
+            </div>
         </div>
 
         <script>

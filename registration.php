@@ -33,6 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $conn->close();
     }
 }
+
+$promotions_query = "SELECT * FROM promotions";
+$promotions_result = $conn->query($promotions_query);
 ?>
 
 
@@ -74,65 +77,59 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </form>
         </div>
 
-        <!-- Carousel for Promotions -->
-        <?php if ($result->num_rows > 0): ?>
-            <div class="carousel-container">
-                <div class="carousel-track">
-                    <?php while ($row = $result->fetch_assoc()): ?>
-                        <div class="carousel-item">
-                            <div class="promo-card">
-                                <h3><?php echo htmlspecialchars($row['promo_code']); ?></h3>
-                                <p><?php echo htmlspecialchars($row['description']); ?></p>
-                                <p class="discount">Discount: <?php echo $row['discount_percent']; ?>%</p>
-                                <p class="date">Valid from <?php echo $row['start_date']; ?> to <?php echo $row['end_date']; ?></p>
+        <?php if ($promotions_result->num_rows > 0): ?>
+                <div class="carousel-container">
+                    <div class="carousel-track">
+                        <?php while ($promo = $promotions_result->fetch_assoc()): ?>
+                            <div class="carousel-item">
+                                <div class="service-card">
+                                    <h3><?php echo htmlspecialchars($promo['promo_code']); ?></h3>
+                                    <p><?php echo htmlspecialchars($promo['description']); ?></p>
+                                    <p> Discount: <span class="discount"><?php echo $promo['discount_percent']; ?></span>%</p>
+                                    <p class="date">Valid: <?php echo $promo['start_date']; ?> to <?php echo $promo['end_date']; ?></p>
+                                </div>
                             </div>
-                        </div>
-                    <?php endwhile; ?>
+                        <?php endwhile; ?>
+                    </div>
+                    <button class="carousel-prev">‹</button>
+                    <button class="carousel-next">›</button>
                 </div>
-                <!-- Carousel control buttons -->
-                <button class="carousel-prev">‹</button>
-                <button class="carousel-next">›</button>
-            </div>
-        <?php else: ?>
-            <p>No promotions available at the moment.</p>
-        <?php endif; ?>
+            <?php else: ?>
+                <p>No promotions available at the moment.</p>
+            <?php endif; ?>
     </div>
 
     <script>
-        // Wait for DOM content to load before initializing carousel
-        document.addEventListener('DOMContentLoaded', function () {
-            // Get carousel elements after the content is rendered
-            const track = document.querySelector('.carousel-track');
-            const items = document.querySelectorAll('.carousel-item');
-            const prevButton = document.querySelector('.carousel-prev');
-            const nextButton = document.querySelector('.carousel-next');
+                    document.querySelectorAll('.carousel-container').forEach((carousel, index) => {
+                const track = carousel.querySelector('.carousel-track');
+                const items = carousel.querySelectorAll('.carousel-item');
+                const prevButton = carousel.querySelector('.carousel-prev');
+                const nextButton = carousel.querySelector('.carousel-next');
 
-            let currentIndex = 0;
-            const totalItems = items.length;
+                let currentIndex = 0;
+                const totalItems = items.length;
 
-            // Update the carousel track position
-            function updateCarouselPosition() {
-                track.style.transform = `translateX(-${currentIndex * 100}%)`;
-            }
+                function updateCarouselPosition() {
+                    track.style.transform = `translateX(-${currentIndex * 100}%)`;
+                }
 
-            // Show next item in the carousel
-            nextButton.addEventListener('click', () => {
-                currentIndex = (currentIndex + 1) % totalItems; // Loop back to the first item
-                updateCarouselPosition();
+                nextButton.addEventListener('click', () => {
+                    currentIndex = (currentIndex + 1) % totalItems;
+                    updateCarouselPosition();
+                });
+
+                prevButton.addEventListener('click', () => {
+                    currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+                    updateCarouselPosition();
+                });
+                        // Optional: Auto-slide every 3 seconds
+                setInterval(() => {
+                    currentIndex = (currentIndex + 1) % totalItems;
+                    updateCarouselPosition();
+                }, 3000);
             });
 
-            // Show previous item in the carousel
-            prevButton.addEventListener('click', () => {
-                currentIndex = (currentIndex - 1 + totalItems) % totalItems; // Loop back to the last item
-                updateCarouselPosition();
-            });
-
-            // Optional: Auto-slide every 3 seconds
-            setInterval(() => {
-                currentIndex = (currentIndex + 1) % totalItems;
-                updateCarouselPosition();
-            }, 3000);
-        });
+</script>
 
     </script>
 </body>
