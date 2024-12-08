@@ -1,7 +1,7 @@
 /* General Body Styles */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f0f4f8;
+    background-image: url(images/background.jpg);
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -13,8 +13,8 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    background-image: url(images/background.jpg);
     height: 100vh;
-    background: linear-gradient(135deg, #8E2DE2, #4A00E0); /* Purple Gradient */
     color: white;
     text-align: center;
     padding: 20px;
