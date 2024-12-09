@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body class="review-page">
     <h1 class="form-title">Submit Your Review</h1>
-    <form class="review-form" action="submit_review.php" method="POST">
+    <form class="review-form" action="submit_review.php" method="POST" onsubmit="showPopup(event)">
         <label class="form-label" for="appointment_id">Appointment ID:</label>
         <input class="form-input" type="number" id="appointment_id" name="appointment_id" required>
         <br><br>
@@ -52,5 +52,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <button class="submit-button" type="submit">Submit Review</button>
     </form>
+
+    <!-- Popup -->
+    <div id="popup-message" class="popup-message hidden">
+        Thank you for submitting a review! Come again!
+    </div>
+
+    <script>
+        // Function to display popup message
+        function showPopup(event) {
+            // Prevent form submission for testing purposes
+            event.preventDefault();
+
+            // Show the popup message
+            const popup = document.getElementById('popup-message');
+            popup.classList.remove('hidden');
+
+            // Automatically hide the popup after 3 seconds
+            setTimeout(() => {
+                popup.classList.add('hidden');
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
