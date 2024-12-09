@@ -349,13 +349,39 @@ body {
 }
 
 .calendar-day {
-    padding: 10px;
+    padding: 5px;
     border: 1px solid #ddd;
     height: 100px;
     position: relative;
     overflow-y: scroll;
 }
 
+.adminbutton{
+    background-color: rgba(0, 0, 0, 0.1);
+    width: 100%;
+    color: white;
+    margin: 2px;
+    border-radius: 10px;
+    text-align: left;
+}
+#manage-services textarea{
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: 15px;
+    width: 30%;
+}
+
+.sertablis{
+    height: 400px;
+    overflow-y: scroll;
+
+}
+
+.sertabliR{
+    height: 200px;
+    overflow-y: scroll;
+
+}
 .calendar-day-header {
     font-weight: bold;
     text-align: center;

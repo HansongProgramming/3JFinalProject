@@ -24,6 +24,7 @@ $imageFiles = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png'];
             <img src="images/logo.png" alt="">
             <h1>hatid ng kaginhawaan</h1>
             <h2>isang masahe sa bawat pagkakataon </h2>
+            <h3>Open every Monday to Saturday 9:00am - 9:00pm</h3>
             <a href="login.php" class="btn">Book Now</a>
         </div>
 
@@ -46,8 +47,6 @@ $imageFiles = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png'];
                         echo '<p class="price">₱' . number_format($row['price'], 2) . '</p>';
                         echo '</div>';
                         echo '</div>';
-
-                        // Increment the image index for the next service
                         $i++;
                     }
                 } else {

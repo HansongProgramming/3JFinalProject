@@ -98,6 +98,15 @@ $services = $services_stmt->get_result();
 $payments_stmt = $conn->prepare("SELECT p.payment_id, a.appointment_id, u.full_name AS customer_name, p.amount, p.payment_status, p.payment_date FROM payments p JOIN appointments a ON p.appointment_id = a.appointment_id JOIN users u ON a.user_id = u.user_id ORDER BY p.payment_date DESC");
 $payments_stmt->execute();
 $payments = $payments_stmt->get_result();
+
+$reviews_stmt = $conn->prepare("SELECT r.rating, r.comment, r.created_at, a.appointment_date, u.full_name as client_name 
+    FROM reviews r
+    JOIN appointments a ON r.appointment_id = a.appointment_id
+    JOIN users u ON r.user_id = u.user_id
+    ORDER BY r.created_at DESC");
+$reviews_stmt->execute();
+$reviews = $reviews_stmt->get_result();
+
 ?>
 
 <!-- HTML and JavaScript remains the same as before -->
@@ -113,10 +122,10 @@ $payments = $payments_stmt->get_result();
     <div class="dashboardContainer">
     <div class="sidebar">
         <h2>Admin Dashboard</h2>
-        <button onclick="showSection('assign-schedule')">Assign Schedule</button> <br>
-        <button onclick="showSection('manage-bookings')">Manage Bookings</button> <br>
-        <button onclick="showSection('manage-services')">Manage Services</button> <br>
-        <button onclick="showSection('payments-reports')">Payments and Reports</button> <br>
+        <button class="adminbutton" onclick="showSection('assign-schedule')">Assign Schedule</button> <br>
+        <button class="adminbutton" onclick="showSection('manage-bookings')">Manage Bookings</button> <br>
+        <button class="adminbutton" onclick="showSection('manage-services')">Manage Services</button> <br>
+        <button class="adminbutton" onclick="showSection('payments-reports')">Payments and Reports</button> <br>
         <a href="logout.php">Logout</a>        
     </div>
 
@@ -186,43 +195,67 @@ $payments = $payments_stmt->get_result();
 
             <div id="manage-bookings" class="content-section">
                 <h3>Manage Bookings</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Customer</th>
-                            <th>Therapist</th>
-                            <th>Service</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php while ($booking = $bookings->fetch_assoc()): ?>
+                <div class="sertablis">
+                    <table>
+                        <thead>
                             <tr>
-                                <td><?php echo htmlspecialchars($booking['customer_name']); ?></td>
-                                <td><?php echo htmlspecialchars($booking['therapist_name']); ?></td>
-                                <td><?php echo htmlspecialchars($booking['service_name']); ?></td>
-                                <td><?php echo $booking['appointment_date']; ?></td>
-                                <td><?php echo "{$booking['start_time']} - {$booking['end_time']}"; ?></td>
-                                <td><?php echo $booking['status']; ?></td>
-                                <td>
-                                    <form method="POST" style="display:inline;">
-                                        <input type="hidden" name="appointment_id" value="<?php echo $booking['appointment_id']; ?>">
-                                        <button type="submit" name="action" value="approve">approve</button>
-                                        <button type="submit" name="action" value="cancel">cancel</button>
-                                        <button type="submit" name="action" value="reschedule">reschedule</button>
-                                    </form>
-                                </td>
+                                <th>Customer</th>
+                                <th>Therapist</th>
+                                <th>Service</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
                             </tr>
-                        <?php endwhile; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php while ($booking = $bookings->fetch_assoc()): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($booking['customer_name']); ?></td>
+                                    <td><?php echo htmlspecialchars($booking['therapist_name']); ?></td>
+                                    <td><?php echo htmlspecialchars($booking['service_name']); ?></td>
+                                    <td><?php echo $booking['appointment_date']; ?></td>
+                                    <td><?php echo "{$booking['start_time']} - {$booking['end_time']}"; ?></td>
+                                    <td><?php echo $booking['status']; ?></td>
+                                    <td>
+                                        <form method="POST" style="display:inline;">
+                                            <input type="hidden" name="appointment_id" value="<?php echo $booking['appointment_id']; ?>">
+                                            <button type="submit" name="action" value="approve">approve</button>
+                                            <button type="submit" name="action" value="cancel">cancel</button>
+                                            <button type="submit" name="action" value="reschedule">reschedule</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="sertablisR">
+                    <div class="reviews">
+                    <h2>Reviews and Comments</h2>
+                    <div class="cards">
+                        <?php if ($reviews->num_rows > 0): ?>
+                            <?php while ($row = $reviews->fetch_assoc()): ?>
+                                <div class="card">
+                                    <p><strong>Client:</strong> <?php echo htmlspecialchars($row['client_name']); ?></p>
+                                    <p><strong>Date:</strong> <?php echo htmlspecialchars($row['appointment_date']); ?></p>
+                                    <p><strong>Rating:</strong> <?php echo htmlspecialchars($row['rating']); ?>/5</p>
+                                    <p><strong>Comment:</strong> <?php echo htmlspecialchars($row['comment']); ?></p>
+                                    <p><strong>Reviewed On:</strong> <?php echo htmlspecialchars($row['created_at']); ?></p>
+                                </div>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <p>No reviews available.</p>
+                        <?php endif; ?>
+                </div>
+            </div>
+    
+                </div>
             </div>
 
             <div id="manage-services" class="content-section">
                 <h3>Manage Services</h3>
+                <div class="sertablis">
                 <table>
                     <thead>
                         <tr>
@@ -251,17 +284,17 @@ $payments = $payments_stmt->get_result();
                         <?php endwhile; ?>
                     </tbody>
                 </table>
-
+                </div>
                 <h4>Add New Service</h4>
                 <form method="POST">
-                    <label for="service_name">Name:</label>
-                    <input type="text" name="service_name" required>
-                    <label for="description">Description:</label>
-                    <textarea name="description"></textarea>
-                    <label for="duration">Duration (mins):</label>
-                    <input type="number" name="duration" required>
-                    <label for="price">Price ($):</label>
-                    <input type="number" step="0.01" name="price" required>
+                    <label for="service_name">Name:</label> <br>
+                    <input type="text" name="service_name" required> <br>
+                    <label for="description">Description:</label> <br>
+                    <textarea name="description"></textarea><br> <br>
+                    <label for="duration">Duration (mins):</label> <br>
+                    <input type="number" name="duration" required> <br>
+                    <label for="price">Price ($):</label><br>
+                    <input type="number" step="0.01" name="price" required> <br>
                     <button type="submit" name="action" value="add_service">Add Service</button>
                 </form>
             </div>
