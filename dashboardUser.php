@@ -45,13 +45,6 @@ $past_appointments = $past_stmt->get_result();
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.js"></script>
 </head>
 <body>
-    <div id="modal-overlay" style="display: none;">
-        <div id="modal-content">
-            <button id="close-modal">Close</button>
-            <div id="modal-body"></div>
-        </div>
-    </div>
-
     <div class="dashboardContainer">
         <div class="sidebar">
         <h1>Welcome, <span class="highlight"><?php echo htmlspecialchars($_SESSION['user_name']); ?></span></h1>
