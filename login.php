@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
     </div>
-
+    <img src="images/overlayedLeaf.png" alt="" class="overlayindex">
     <script>
         // Get carousel elements
         const track = document.querySelector('.carousel-track');

@@ -100,7 +100,7 @@ $promotions_result = $conn->query($promotions_query);
     </div>
 
     <script>
-                    document.querySelectorAll('.carousel-container').forEach((carousel, index) => {
+                document.querySelectorAll('.carousel-container').forEach((carousel, index) => {
                 const track = carousel.querySelector('.carousel-track');
                 const items = carousel.querySelectorAll('.carousel-item');
                 const prevButton = carousel.querySelector('.carousel-prev');

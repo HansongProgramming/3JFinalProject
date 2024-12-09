@@ -57,48 +57,57 @@ $therapists = $conn->query("SELECT user_id, full_name FROM users WHERE role = 't
 <html>
 <head>
     <title>Make a Booking</title>
-    <link rel="stylesheet" href="aesthetics.css">
+    <link rel="stylesheet" href="aesthetics.css?v=1.0">
 </head>
 <body>
+    <br><br>
+    <div class="bookingContainer">
+    <div class="book">
     <h1>Book a Service</h1>
+        <?php
+        if (isset($success_message)) {
+            echo "<p style='color: green;'>$success_message</p>";
+        }
+        if (isset($error_message)) {
+            echo "<p style='color: red;'>$error_message</p>";
+        }
+        ?>
 
-    <?php
-    if (isset($success_message)) {
-        echo "<p style='color: green;'>$success_message</p>";
-    }
-    if (isset($error_message)) {
-        echo "<p style='color: red;'>$error_message</p>";
-    }
-    ?>
+        <form method="POST">
+            <label for="service_id">Select a Service:</label> <br>
+            <select name="service_id" required>
+                <option value="">-- Select a Service --</option>
+                <?php while ($row = $services->fetch_assoc()): ?>
+                    <option value="<?php echo $row['service_id']; ?>">
+                        <?php echo htmlspecialchars($row['service_name']); ?>
+                    </option>
+                <?php endwhile; ?>
+            </select><br>
 
-    <form method="POST">
-        <label for="service_id">Select a Service:</label>
-        <select name="service_id" required>
-            <option value="">-- Select a Service --</option>
-            <?php while ($row = $services->fetch_assoc()): ?>
-                <option value="<?php echo $row['service_id']; ?>">
-                    <?php echo htmlspecialchars($row['service_name']); ?>
-                </option>
-            <?php endwhile; ?>
-        </select><br>
+            <label for="therapist_id">Select a Therapist:</label><br>
+            <select name="therapist_id" required>
+                <option value="">-- Select a Therapist --</option>
+                <?php while ($row = $therapists->fetch_assoc()): ?>
+                    <option value="<?php echo $row['user_id']; ?>">
+                        <?php echo htmlspecialchars($row['full_name']); ?>
+                    </option>
+                <?php endwhile; ?>
+            </select><br>
 
-        <label for="therapist_id">Select a Therapist:</label>
-        <select name="therapist_id" required>
-            <option value="">-- Select a Therapist --</option>
-            <?php while ($row = $therapists->fetch_assoc()): ?>
-                <option value="<?php echo $row['user_id']; ?>">
-                    <?php echo htmlspecialchars($row['full_name']); ?>
-                </option>
-            <?php endwhile; ?>
-        </select><br>
+            <label for="appointment_date">Date:</label><br>
+            <input type="date" name="appointment_date" required><br>
 
-        <label for="appointment_date">Date:</label>
-        <input type="date" name="appointment_date" required><br>
+            <label for="start_time">Start Time:</label><br>
+            <input type="time" name="start_time" required><br> <br>
 
-        <label for="start_time">Start Time:</label>
-        <input type="time" name="start_time" required><br>
+            <button type="submit" >Confirm Booking</button>
+        </form> <br>
+        <br> 
+        <div class="circ"><a href="dashboardUser.php"><</a>
+        </div>
+    </div>
+    </div>
+    
 
-        <button type="submit">Confirm Booking</button>
-    </form>
 </body>
 </html>

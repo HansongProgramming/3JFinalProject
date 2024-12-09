@@ -94,5 +94,7 @@ $imageFiles = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png'];
             }, 3000);
         </script>
     </div>
+    <img src="images/overlayedLeaf.png" alt="" class="overlayindex">
+
 </body>
 </html>

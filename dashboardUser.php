@@ -150,6 +150,15 @@ $past_appointments = $past_stmt->get_result();
         </div>
 
         <script>
+        document.querySelectorAll('.reschedule-button').forEach(button => {
+            button.addEventListener('click', function () {
+                const appointmentId = this.getAttribute('data-appointment-id');
+                window.location.href = `reschedule.php?appointment_id=${appointmentId}`;
+            });
+        });
+
+
+
             function updateDateTime() {
                 const dateTimeElement = document.getElementById('date-time');
                 const now = new Date();
@@ -205,6 +214,71 @@ $past_appointments = $past_stmt->get_result();
                     }
                 });
             });
+        </script>
+                <script>
+            // Get carousel elements
+            const track = document.querySelector('.carousel-track');
+            const items = document.querySelectorAll('.carousel-item');
+            const prevButton = document.querySelector('.carousel-prev');
+            const nextButton = document.querySelector('.carousel-next');
+
+            let currentIndex = 0;
+            const totalItems = items.length;
+
+            // Update the carousel track position
+            function updateCarouselPosition() {
+                track.style.transform = `translateX(-${currentIndex * 100}%)`;
+            }
+
+            // Show next item in the carousel
+            nextButton.addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % totalItems;
+                updateCarouselPosition();
+            });
+
+            // Show previous item in the carousel
+            prevButton.addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+                updateCarouselPosition();
+            });
+
+            // Optional: Auto-slide every 3 seconds
+            setInterval(() => {
+                currentIndex = (currentIndex + 1) % totalItems;
+                updateCarouselPosition();
+            }, 3000);
+        </script>
+
+        <script>
+                        document.querySelectorAll('.carousel-container').forEach((carousel, index) => {
+                        const track = carousel.querySelector('.carousel-track');
+                        const items = carousel.querySelectorAll('.carousel-item');
+                        const prevButton = carousel.querySelector('.carousel-prev');
+                        const nextButton = carousel.querySelector('.carousel-next');
+
+                        let currentIndex = 0;
+                        const totalItems = items.length;
+
+                        function updateCarouselPosition() {
+                            track.style.transform = `translateX(-${currentIndex * 100}%)`;
+                        }
+
+                        nextButton.addEventListener('click', () => {
+                            currentIndex = (currentIndex + 1) % totalItems;
+                            updateCarouselPosition();
+                        });
+
+                        prevButton.addEventListener('click', () => {
+                            currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+                            updateCarouselPosition();
+                        });
+                                // Optional: Auto-slide every 3 seconds
+                        setInterval(() => {
+                            currentIndex = (currentIndex + 1) % totalItems;
+                            updateCarouselPosition();
+                        }, 3000);
+                    });
+
         </script>
     </div>
 </body>
