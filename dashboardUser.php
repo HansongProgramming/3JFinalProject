@@ -40,7 +40,7 @@ $past_appointments = $past_stmt->get_result();
 <html lang="en">
 <head>
     <title>Dashboard</title>
-    <link rel="stylesheet" href="aesthetics.css">
+    <link rel="stylesheet" href="aesthetics.css?v=1.0">
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.js"></script>
 </head>
