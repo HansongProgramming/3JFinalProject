@@ -1,5 +1,5 @@
 <?php
-include 'commentsite.php';
+include 'config.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $appointment_id = $_POST['appointment_id'];
