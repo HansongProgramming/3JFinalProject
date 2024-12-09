@@ -19,7 +19,7 @@ $upcoming_stmt = $conn->prepare("SELECT a.appointment_id, a.appointment_date, a.
     FROM appointments a
     JOIN services s ON a.service_id = s.service_id
     JOIN users u ON a.therapist_id = u.user_id
-    WHERE a.user_id = ? AND a.appointment_date >= CURDATE()
+    WHERE a.user_id = ? AND a.appointment_date >= CURDATE() AND a.status != 'canceled'
     ORDER BY a.appointment_date, a.start_time");
 $upcoming_stmt->bind_param("i", $user_id);
 $upcoming_stmt->execute();
