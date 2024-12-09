@@ -87,20 +87,24 @@ $past_appointments = $past_stmt->get_result();
         </div>
 
         <h2><span class="highlight">Past</span> Appointments</h2>
-        <div class="cards">
-            <?php if ($past_appointments->num_rows > 0): ?>
-                <?php while ($row = $past_appointments->fetch_assoc()): ?>
-                    <div class="card">
-                        <h3><?php echo $row['service_name']; ?></h3>
-                        <p><strong>Date:</strong> <?php echo $row['appointment_date']; ?></p>
-                        <p><strong>Time:</strong> <?php echo $row['start_time']; ?></p>
-                        <p><strong>Therapist:</strong> <?php echo $row['therapist_name']; ?></p>
-                    </div>
-                <?php endwhile; ?>
-            <?php else: ?>
-                <p>No past appointments.</p>
-            <?php endif; ?>
-        </div>
+            <div class="cards">
+                <?php if ($past_appointments->num_rows > 0): ?>
+                    <?php while ($row = $past_appointments->fetch_assoc()): ?>
+                        <div class="card">
+                            <h3><?php echo $row['service_name']; ?></h3>
+                            <p><strong>Date:</strong> <?php echo $row['appointment_date']; ?></p>
+                            <p><strong>Time:</strong> <?php echo $row['start_time']; ?></p>
+                            <p><strong>Therapist:</strong> <?php echo $row['therapist_name']; ?></p>
+                            
+                            <!-- Review button added here -->
+                            <a href="commentsite.php?appointment_id=<?php echo $row['appointment_id']; ?>&user_id=<?php echo $user_id; ?>" class="review-button">Review</a>
+                        </div>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <p>No past appointments.</p>
+                <?php endif; ?>
+            </div>
+
         </div>
         <div class="filler">
             <div id="date-time"></div>
