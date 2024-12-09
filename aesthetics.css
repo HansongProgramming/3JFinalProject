@@ -277,8 +277,8 @@ body {
 
 /* Entire scrollbar */
 ::-webkit-scrollbar {
-    width: 4px; /* Width of the scrollbar */
-    height: 12px; /* Height of the scrollbar for horizontal scroll */
+    width: 4px; 
+    height: 12px; 
 }
 
 /* Scrollbar track */
@@ -294,8 +294,7 @@ body {
 
 /* Scrollbar thumb hover effect */
 ::-webkit-scrollbar-thumb:hover {
-    background: #d5d5d5; /* Darker color when hovered */
-}
+    background: #d5d5d5; 
 
 .highlight{
     font-weight: bold;
@@ -494,3 +493,4 @@ body {
 .submit-button:hover {
     background-color: #45a049;
 }
+
