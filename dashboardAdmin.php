@@ -7,28 +7,23 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 
 require 'config.php';
 
-// Prepare therapist data
 $therapists_stmt = $conn->prepare("SELECT user_id, full_name FROM users WHERE role = 'therapist'");
 $therapists_stmt->execute();
 $therapists = $therapists_stmt->get_result();
 
-// Initialize the success/error message variables
 $success_message = $error_message = "";
 
-// Handle different form actions
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $action = isset($_POST['action']) ? $_POST['action'] : '';
 
     switch ($action) {
         case 'assign_schedule':
-            // Handle assign schedule
             if (isset($_POST['therapist_id'], $_POST['date'], $_POST['start_time'], $_POST['end_time'])) {
                 $therapist_id = $_POST['therapist_id'];
                 $date = $_POST['date'];
                 $start_time = $_POST['start_time'];
                 $end_time = $_POST['end_time'];
 
-                // Insert schedule into the database
                 $stmt = $conn->prepare("INSERT INTO availability (therapist_id, date, start_time, end_time) VALUES (?, ?, ?, ?)");
                 $stmt->bind_param("isss", $therapist_id, $date, $start_time, $end_time);
 
@@ -43,7 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         case 'approve':
         case 'cancel':
         case 'reschedule':
-            // Handle booking management
             if (isset($_POST['appointment_id'])) {
                 $appointment_id = intval($_POST['appointment_id']);
                 switch ($action) {
@@ -54,7 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $update_stmt = $conn->prepare("UPDATE appointments SET status = 'canceled' WHERE appointment_id = ?");
                         break;
                     case 'reschedule':
-                        // Handle reschedule logic if needed
                         break;
                 }
 
@@ -66,7 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             break;
 
         case 'add_service':
-            // Handle service addition
             if (isset($_POST['service_name'], $_POST['description'], $_POST['duration'], $_POST['price'])) {
                 $stmt = $conn->prepare("INSERT INTO services (service_name, description, duration, price) VALUES (?, ?, ?, ?)");
                 $stmt->bind_param("ssdi", $_POST['service_name'], $_POST['description'], $_POST['duration'], $_POST['price']);

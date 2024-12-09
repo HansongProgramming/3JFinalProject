@@ -15,7 +15,7 @@ $services_result = $conn->query($services_query);
 $promotions_query = "SELECT * FROM promotions";
 $promotions_result = $conn->query($promotions_query);
 
-$upcoming_stmt = $conn->prepare("SELECT a.appointment_date, a.start_time, s.service_name, u.full_name as therapist_name 
+$upcoming_stmt = $conn->prepare("SELECT a.appointment_id, a.appointment_date, a.start_time, s.service_name, u.full_name as therapist_name 
     FROM appointments a
     JOIN services s ON a.service_id = s.service_id
     JOIN users u ON a.therapist_id = u.user_id
@@ -25,7 +25,7 @@ $upcoming_stmt->bind_param("i", $user_id);
 $upcoming_stmt->execute();
 $upcoming_appointments = $upcoming_stmt->get_result();
 
-$past_stmt = $conn->prepare("SELECT a.appointment_date, a.start_time, s.service_name, u.full_name as therapist_name 
+$past_stmt = $conn->prepare("SELECT a.appointment_id, a.appointment_date, a.start_time, s.service_name, u.full_name as therapist_name 
     FROM appointments a
     JOIN services s ON a.service_id = s.service_id
     JOIN users u ON a.therapist_id = u.user_id
@@ -35,7 +35,6 @@ $past_stmt->bind_param("i", $user_id);
 $past_stmt->execute();
 $past_appointments = $past_stmt->get_result();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -73,11 +72,13 @@ $past_appointments = $past_stmt->get_result();
         <div class="cards">
             <?php if ($upcoming_appointments->num_rows > 0): ?>
                 <?php while ($row = $upcoming_appointments->fetch_assoc()): ?>
-                    <div class="card">
+                    <div class="card" id="appointment-<?php echo $row['appointment_id']; ?>">
                         <h3><?php echo $row['service_name']; ?></h3>
                         <p><strong>Date:</strong> <?php echo $row['appointment_date']; ?></p>
                         <p><strong>Time:</strong> <?php echo $row['start_time']; ?></p>
                         <p><strong>Therapist:</strong> <?php echo $row['therapist_name']; ?></p>
+                        <button class="cancel-button" data-appointment-id="<?php echo $row['appointment_id']; ?>">Cancel</button>
+                        <button class="reschedule-button" data-appointment-id="<?php echo $row['appointment_id']; ?>">Reschedule</button>
                     </div>
                 <?php endwhile; ?>
             <?php else: ?>
@@ -148,7 +149,6 @@ $past_appointments = $past_stmt->get_result();
             <?php endif; ?>
         </div>
 
-
         <script>
             function updateDateTime() {
                 const dateTimeElement = document.getElementById('date-time');
@@ -172,38 +172,40 @@ $past_appointments = $past_stmt->get_result();
             setInterval(updateDateTime, 1000);
 
             updateDateTime();
+        </script>
 
-    </script>
-    <script>
-            document.querySelectorAll('.carousel-container').forEach((carousel, index) => {
-                const track = carousel.querySelector('.carousel-track');
-                const items = carousel.querySelectorAll('.carousel-item');
-                const prevButton = carousel.querySelector('.carousel-prev');
-                const nextButton = carousel.querySelector('.carousel-next');
+        <script>
+            document.querySelectorAll('.cancel-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const appointmentId = this.getAttribute('data-appointment-id');
+                    const appointmentCard = document.getElementById(`appointment-${appointmentId}`);
 
-                let currentIndex = 0;
-                const totalItems = items.length;
-
-                function updateCarouselPosition() {
-                    track.style.transform = `translateX(-${currentIndex * 100}%)`;
-                }
-
-                nextButton.addEventListener('click', () => {
-                    currentIndex = (currentIndex + 1) % totalItems;
-                    updateCarouselPosition();
+                    if (confirm("Are you sure you want to cancel this appointment?")) {
+                        // Send an AJAX request to the server to cancel the appointment
+                        fetch('cancel_appointment.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ appointment_id: appointmentId })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                appointmentCard.remove();
+                                alert("Appointment canceled successfully.");
+                            } else {
+                                alert("An error occurred while canceling the appointment.");
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error:", error);
+                            alert("An error occurred while canceling the appointment.");
+                        });
+                    }
                 });
-
-                prevButton.addEventListener('click', () => {
-                    currentIndex = (currentIndex - 1 + totalItems) % totalItems;
-                    updateCarouselPosition();
-                });
-                        // Optional: Auto-slide every 3 seconds
-                setInterval(() => {
-                    currentIndex = (currentIndex + 1) % totalItems;
-                    updateCarouselPosition();
-                }, 3000);
             });
-</script>
+        </script>
     </div>
 </body>
 </html>

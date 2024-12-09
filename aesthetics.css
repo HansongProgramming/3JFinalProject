@@ -366,3 +366,8 @@ body {
     width: 100vh;
 }
 
+.content-section button{
+    background-color: rgba(0, 0, 0, 0.1);
+    color: white;
+}
+
